@@ -1,0 +1,48 @@
+{
+  "author": {
+    "email": "sophie.jeanne.la.douce@gmail.com",
+    "name": "Sophie-Jeanne la Douce",
+    "url": "https://github.com/strawberryangel"
+  },
+  "bin": "dist/index.js",
+  "bugs": "https://github.com/strawberryangel/avatar-sensor-log-server/issues",
+  "dependencies": {
+    "@blackpaw/avatar-sensor": "^1.0.4",
+    "@blackpaw/notification-bus": "^1.0.3",
+    "@blackpaw/secondlife": "^1.0.4",
+    "@reactivex/rxjs": "^5.1.0",
+    "@types/mongodb": "^2.1.41",
+    "@types/node": "^7.0.5",
+    "body-parser": "^1.16.0",
+    "compression": "^1.6.2",
+    "cors": "^2.8.1",
+    "debug": "^2.6.1",
+    "express": "^4.14.1",
+    "mongodb": "^2.2.24",
+    "nconf": "^0.8.4",
+    "ws": "^2.1.0"
+  },
+  "description": "Avatar Sensor Log Server",
+  "keywords": [
+    "avatar",
+    "blackpaw",
+    "life",
+    "log",
+    "logger",
+    "lsl",
+    "second",
+    "secondlife",
+    "sensor",
+    "server"
+  ],
+  "license": "UNLICENSED",
+  "main": "src/index.ts",
+  "name": "@blackpaw/avatar-sensor-log-server",
+  "private": true,
+  "repository": "git@github.com:strawberryangel/avatar-sensor-log-server.git",
+  "scripts": {
+    "install": "tsc"
+  },
+  "typings": "dist/index",
+  "version": "1.0.0"
+}
