@@ -1,5 +1,5 @@
 const debug = require('debug')('app:main')
-const mongo = require('mongo')
+const mongo = require('mongodb')
 const nconf = require('nconf')
 
 ////////////////////////////////////////////////////////////////////////////////
