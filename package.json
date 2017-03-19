@@ -7,8 +7,8 @@
   "bin": "dist/index.js",
   "bugs": "https://github.com/strawberryangel/avatar-sensor-log-server/issues",
   "dependencies": {
-    "@blackpaw/avatar-sensor": "^1.0.4",
-    "@blackpaw/notification-bus": "^1.0.3",
+    "@blackpaw/avatar-sensor": "^1.1.0",
+    "@blackpaw/pubsub": "^1.0.0",
     "@blackpaw/secondlife": "^1.0.4",
     "@reactivex/rxjs": "^5.1.0",
     "@types/mongodb": "^2.1.41",
@@ -20,7 +20,7 @@
     "express": "^4.14.1",
     "mongodb": "^2.2.24",
     "nconf": "^0.8.4",
-    "ws": "^2.1.0"
+    "redis": "^2.7.1"
   },
   "description": "Avatar Sensor Log Server",
   "keywords": [
@@ -44,5 +44,5 @@
     "install": "tsc"
   },
   "typings": "dist/index",
-  "version": "1.0.1"
+  "version": "2.0.0"
 }

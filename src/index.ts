@@ -25,12 +25,14 @@ let sensorLogger: SensorLogger
 
 ////////////////////////////////////////////////////////////////////////////////
 //
-//Connect to notification bus and the database.
+//Connect to the pub/sub system and the database.
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-import { NotificationBusClient } from '@blackpaw/notification-bus'
-const notificationBus = new NotificationBusClient()
+import { RelayChannel } from '@blackpaw/avatar-sensor'
+import { ISubscriber, Subscriber } from '@blackpaw/pubsub'
+
+let subscriber: ISubscriber
 
 mongo.MongoClient.connect(databaseUri, (err, connection) => {
     if (err) {
@@ -42,8 +44,8 @@ mongo.MongoClient.connect(databaseUri, (err, connection) => {
 
     // Create sensor logger and send all incoming sensor reading to it.
     sensorLogger = new SensorLogger(connection)
-    notificationBus.observable
-        .filter((x) => x.avatarSensorReading != null)
-        .map((x) => x.avatarSensorReading)
+    subscriber = new Subscriber(RelayChannel)
+
+    subscriber.observable
         .subscribe((sensorReading) => sensorLogger.add(sensorReading))
 })

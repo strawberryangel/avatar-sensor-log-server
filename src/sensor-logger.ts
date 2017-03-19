@@ -1,15 +1,13 @@
 import { AvatarSensorReading } from '@blackpaw/avatar-sensor'
 
 export class SensorLogger {
+    private sensorlog: any
     constructor(private connection: any) {
-    }
-
-    private get db() {
-        return this.connection.collection("sensorlog")
+        this.sensorlog = this.connection.collection("sensorlog")
     }
 
     public add = (sensorReading: AvatarSensorReading) => {
-        this.db.insert(sensorReading, (error) => {
+        this.sensorlog.insert(sensorReading, (error) => {
             if (error)
                 console.error(
                     'Failed to insert into sensor log: ', sensorReading
