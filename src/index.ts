@@ -2,9 +2,10 @@ const debug = require('debug')('app:main')
 const mongo = require('mongodb')
 const nconf = require('nconf')
 
+import { jsonToSensorReading } from './json-to-sensor-reading'
 import { RelayChannel } from '@blackpaw/avatar-sensor'
-import { ISubscriber, Subscriber } from '@blackpaw/pubsub'
 import { ISensorLogger, SensorLogger } from './sensor-logger'
+import { ISubscriber, Subscriber } from '@blackpaw/pubsub'
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -26,20 +27,25 @@ mongo.MongoClient.connect(databaseUri, startupLogger)
 ////////////////////////////////////////////////////////////////////////////////
 
 let sensorLogger: ISensorLogger
-let subscriber: ISubscriber
+let incomingSensorReadings: ISubscriber
 
 function startupLogger(err, connection) {
     if (err) {
+        debug("Cannot connect to the database: ", err)
         console.error("Cannot connect to the database: ", err)
         return
     }
 
-    debug("Connected to the database at " + databaseUri)
+    debug("Connected to the database: ", databaseUri)
 
     // Create sensor logger and send all incoming sensor reading to it.
     sensorLogger = new SensorLogger(connection)
-    subscriber = new Subscriber(RelayChannel)
+    incomingSensorReadings = new Subscriber(RelayChannel)
 
-    subscriber.observable
+    // Convert incoming JSON to sensor readings and log them. 
+    incomingSensorReadings.observable
+        .map(json => jsonToSensorReading(json))
+        .filter(x => x != null)
         .subscribe((sensorReading) => sensorLogger.add(sensorReading))
 }
+
