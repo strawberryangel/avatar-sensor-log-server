@@ -6,7 +6,7 @@ export interface ISensorLogger {
     add(sensorReading: IAvatarSensorReading): void
 }
 
-export class SensorLogger {
+export class SensorLogger implements ISensorLogger {
     private sensorlog: any
     constructor(databaseConnection: any) {
         this.sensorlog = databaseConnection.collection('sensorlog')
