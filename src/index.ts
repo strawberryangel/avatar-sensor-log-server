@@ -2,6 +2,10 @@ const debug = require('debug')('app:main')
 const mongo = require('mongodb')
 const nconf = require('nconf')
 
+import { RelayChannel } from '@blackpaw/avatar-sensor'
+import { ISubscriber, Subscriber } from '@blackpaw/pubsub'
+import { ISensorLogger, SensorLogger } from './sensor-logger'
+
 ////////////////////////////////////////////////////////////////////////////////
 //
 //  Configuration
@@ -13,15 +17,7 @@ nconf.argv().env().defaults({
 })
 
 const databaseUri = nconf.get('database')
-
-////////////////////////////////////////////////////////////////////////////////
-//
-//  Place holder for the sensor logger.
-//
-////////////////////////////////////////////////////////////////////////////////
-
-import { SensorLogger } from './sensor-logger'
-let sensorLogger: SensorLogger
+mongo.MongoClient.connect(databaseUri, startupLogger)
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -29,12 +25,10 @@ let sensorLogger: SensorLogger
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-import { RelayChannel } from '@blackpaw/avatar-sensor'
-import { ISubscriber, Subscriber } from '@blackpaw/pubsub'
-
+let sensorLogger: ISensorLogger
 let subscriber: ISubscriber
 
-mongo.MongoClient.connect(databaseUri, (err, connection) => {
+function startupLogger(err, connection) {
     if (err) {
         console.error("Cannot connect to the database: ", err)
         return
@@ -48,4 +42,4 @@ mongo.MongoClient.connect(databaseUri, (err, connection) => {
 
     subscriber.observable
         .subscribe((sensorReading) => sensorLogger.add(sensorReading))
-})
+}
