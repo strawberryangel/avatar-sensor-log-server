@@ -3,7 +3,7 @@ const debug = require('debug')('app:logger')
 import { IAvatarSensorReading } from '@blackpaw/avatar-sensor'
 
 export interface ISensorLogger {
-    add(sensorReading: IAvatarSensorReading): void
+    add(json: string): void
 }
 
 export class SensorLogger {
@@ -12,14 +12,15 @@ export class SensorLogger {
         this.sensorlog = this.connection.collection("sensorlog")
     }
 
-    public add = (sensorReading: IAvatarSensorReading): void => {
-        if (sensorReading == null) {
-            debug('Logger received a null object. Skipping.')
+    public add = (json: string): void => {
+        if (!json) {
+            debug('Logger received an empty string. Skipping.')
             return
         }
 
         // Need to turn some JSON-encoded data back into objects.
-        this.unflatten(sensorReading)
+        let sensorReading: IAvatarSensorReading = this.unflatten(json)
+        if (!sensorReading) return
 
         debug('Received sensor reading: ', sensorReading)
         debug('Attemtping to insert into the database.')
@@ -31,8 +32,25 @@ export class SensorLogger {
         })
     }
 
-    private unflatten = (reading: IAvatarSensorReading): void => {
-        if (reading && typeof reading.when === 'string')
-            reading.when = new Date(reading.when)
+    private unflatten = (json: string): IAvatarSensorReading => {
+        let result: IAvatarSensorReading
+        try {
+            result = JSON.parse(json)
+        } catch (error) {
+            console.error(`Logger can't parse string: `, error, json)
+            debug(`Logger can't parse string: `, error, json)
+            return null
+        }
+
+        if (typeof result !== 'object') {
+            console.error(`Received a non-object of type ${typeof result}.`, result)
+            debug(`Received a non-object of type ${typeof result}.`, result)
+            return null
+        }
+
+        if (result && typeof result.when === 'string')
+            result.when = new Date(result.when)
+
+        return result
     }
 }
